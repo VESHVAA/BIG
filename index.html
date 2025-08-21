@@ -1,0 +1,1087 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MediGuard - Fraud Detection System</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        :root {
+            --primary: #2c3e50;
+            --secondary: #3498db;
+            --accent: #e74c3c;
+            --light: #ecf0f1;
+            --dark: #2c3e50;
+            --success: #2ecc71;
+            --warning: #f39c12;
+            --provider: #3498db;
+            --medicare: #2ecc71;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+        
+        .container {
+            width: 100%;
+            max-width: 1200px;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        header {
+            background: var(--primary);
+            color: white;
+            padding: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .logo i {
+            font-size: 24px;
+            color: var(--accent);
+        }
+        
+        .logo h1 {
+            font-weight: 700;
+            font-size: 24px;
+        }
+        
+        .nav-buttons {
+            display: flex;
+            gap: 15px;
+        }
+        
+        .btn {
+            padding: 10px 20px;
+            border-radius: 30px;
+            border: none;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .btn-provider {
+            background: var(--provider);
+            color: white;
+        }
+        
+        .btn-medicare {
+            background: var(--medicare);
+            color: white;
+        }
+        
+        .btn-logout {
+            background: var(--accent);
+            color: white;
+        }
+        
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+        
+        .hero {
+            padding: 40px;
+            text-align: center;
+            background: linear-gradient(to right, #4b6cb7, #182848);
+            color: white;
+        }
+        
+        .hero h2 {
+            font-size: 32px;
+            margin-bottom: 20px;
+        }
+        
+        .hero p {
+            font-size: 18px;
+            max-width: 800px;
+            margin: 0 auto 30px;
+            line-height: 1.6;
+        }
+        
+        /* Role Selection Styles */
+        .role-selection {
+            padding: 50px 40px;
+            text-align: center;
+        }
+        
+        .role-selection h3 {
+            font-size: 28px;
+            margin-bottom: 40px;
+            color: var(--dark);
+        }
+        
+        .role-options {
+            display: flex;
+            justify-content: center;
+            gap: 50px;
+            flex-wrap: wrap;
+        }
+        
+        .role-card {
+            width: 250px;
+            padding: 30px 20px;
+            border-radius: 10px;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            background: white;
+        }
+        
+        .role-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.15);
+        }
+        
+        .role-card i {
+            font-size: 60px;
+            margin-bottom: 20px;
+        }
+        
+        .provider-role i {
+            color: var(--provider);
+        }
+        
+        .medicare-role i {
+            color: var(--medicare);
+        }
+        
+        .role-card h4 {
+            font-size: 22px;
+            margin-bottom: 15px;
+        }
+        
+        .role-card p {
+            color: #666;
+            line-height: 1.5;
+        }
+        
+        /* Login Styles */
+        .login-container, .signup-container {
+            display: none;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 30px;
+            padding: 40px;
+        }
+        
+        .login-box, .signup-box {
+            flex: 1;
+            min-width: 350px;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+            padding: 30px;
+        }
+        
+        .provider-login, .provider-signup {
+            border-top: 5px solid var(--provider);
+        }
+        
+        .medicare-login, .medicare-signup {
+            border-top: 5px solid var(--medicare);
+        }
+        
+        .login-header, .signup-header {
+            text-align: center;
+            margin-bottom: 25px;
+        }
+        
+        .login-header i, .signup-header i {
+            font-size: 40px;
+            margin-bottom: 15px;
+        }
+        
+        .provider-login .login-header i,
+        .provider-signup .signup-header i {
+            color: var(--provider);
+        }
+        
+        .medicare-login .login-header i,
+        .medicare-signup .signup-header i {
+            color: var(--medicare);
+        }
+        
+        .login-header h3, .signup-header h3 {
+            font-size: 24px;
+            margin-bottom: 10px;
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: var(--dark);
+        }
+        
+        .form-group input, .form-group select {
+            width: 100%;
+            padding: 12px 15px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 16px;
+            transition: border 0.3s ease;
+        }
+        
+        .form-group input:focus, .form-group select:focus {
+            border-color: var(--secondary);
+            outline: none;
+        }
+        
+        .form-options {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 20px;
+        }
+        
+        .login-btn, .signup-btn {
+            width: 100%;
+            padding: 12px;
+            background: var(--primary);
+            color: white;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.3s ease;
+        }
+        
+        .provider-login .login-btn,
+        .provider-signup .signup-btn {
+            background: var(--provider);
+        }
+        
+        .medicare-login .login-btn,
+        .medicare-signup .signup-btn {
+            background: var(--medicare);
+        }
+        
+        .login-btn:hover, .signup-btn:hover {
+            opacity: 0.9;
+        }
+        
+        .back-btn, .switch-btn {
+            display: block;
+            text-align: center;
+            margin-top: 20px;
+            color: var(--secondary);
+            text-decoration: none;
+            font-weight: 600;
+            cursor: pointer;
+        }
+        
+        .back-btn:hover, .switch-btn:hover {
+            text-decoration: underline;
+        }
+        
+        /* Dashboard Styles */
+        .dashboard {
+            display: none;
+            padding: 30px;
+        }
+        
+        .dashboard-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .dashboard-header h2 {
+            font-size: 28px;
+            color: var(--dark);
+        }
+        
+        .dashboard-header h2 i {
+            margin-right: 10px;
+        }
+        
+        .provider-dashboard h2 i {
+            color: var(--provider);
+        }
+        
+        .medicare-dashboard h2 i {
+            color: var(--medicare);
+        }
+        
+        .stats {
+            display: flex;
+            gap: 20px;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+        }
+        
+        .stat-card {
+            flex: 1;
+            min-width: 200px;
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+            text-align: center;
+        }
+        
+        .stat-card i {
+            font-size: 30px;
+            margin-bottom: 15px;
+        }
+        
+        .stat-card h3 {
+            font-size: 32px;
+            margin-bottom: 5px;
+            color: var(--dark);
+        }
+        
+        .stat-card p {
+            color: #666;
+        }
+        
+        .dashboard-content {
+            display: flex;
+            gap: 30px;
+            flex-wrap: wrap;
+        }
+        
+        .content-card {
+            flex: 1;
+            min-width: 300px;
+            background: white;
+            padding: 25px;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+        }
+        
+        .content-card h3 {
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #eee;
+            color: var(--dark);
+        }
+        
+        .upload-area {
+            border: 2px dashed #ddd;
+            border-radius: 10px;
+            padding: 30px;
+            text-align: center;
+            margin-bottom: 20px;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+        
+        .upload-area:hover {
+            border-color: var(--provider);
+            background: #f9f9f9;
+        }
+        
+        .upload-area i {
+            font-size: 40px;
+            color: var(--provider);
+            margin-bottom: 15px;
+        }
+        
+        .search-box {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+        
+        .search-box input {
+            flex: 1;
+            padding: 12px 15px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 16px;
+        }
+        
+        .search-box button {
+            padding: 12px 20px;
+            background: var(--medicare);
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        
+        .results-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        
+        .results-table th, .results-table td {
+            padding: 12px 15px;
+            text-align: left;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .results-table th {
+            background: #f9f9f9;
+            font-weight: 600;
+        }
+        
+        .results-table tr:hover {
+            background: #f5f5f5;
+        }
+        
+        .risk-high {
+            color: var(--accent);
+            font-weight: 600;
+        }
+        
+        .risk-medium {
+            color: var(--warning);
+            font-weight: 600;
+        }
+        
+        .risk-low {
+            color: var(--success);
+            font-weight: 600;
+        }
+        
+        footer {
+            background: var(--dark);
+            color: white;
+            text-align: center;
+            padding: 20px;
+            margin-top: auto;
+        }
+        
+        @media (max-width: 768px) {
+            .role-options {
+                gap: 30px;
+            }
+            
+            .role-card {
+                width: 100%;
+                max-width: 300px;
+            }
+            
+            .login-container, .signup-container {
+                flex-direction: column;
+            }
+            
+            .login-box, .signup-box {
+                min-width: 100%;
+            }
+            
+            .hero h2 {
+                font-size: 28px;
+            }
+            
+            .hero p {
+                font-size: 16px;
+            }
+            
+            .stats {
+                flex-direction: column;
+            }
+            
+            .dashboard-content {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <div class="logo">
+                <i class="fas fa-shield-alt"></i>
+                <h1>MediGuard</h1>
+            </div>
+            <div class="nav-buttons">
+                <button class="btn btn-provider" onclick="showProviderLogin()">Provider Portal</button>
+                <button class="btn btn-medicare" onclick="showMedicareLogin()">Medicare Admin</button>
+                <button class="btn btn-logout" onclick="logout()" style="display: none;" id="logoutBtn">Logout</button>
+            </div>
+        </header>
+        
+        <div class="hero">
+            <h2>Advanced Medicare Fraud Detection System</h2>
+            <p>Provider fraud is one of the biggest problems facing the Medicare program. Our AI-powered system helps detect and prevent fraudulent claims, saving billions of dollars annually.</p>
+        </div>
+        
+        <!-- Role Selection -->
+        <div class="role-selection" id="roleSelection">
+            <h3>Select Your Role</h3>
+            <div class="role-options">
+                <div class="role-card provider-role" onclick="showProviderLogin()">
+                    <i class="fas fa-user-md"></i>
+                    <h4>Healthcare Provider</h4>
+                    <p>Login to submit claims and manage your provider account</p>
+                </div>
+                
+                <div class="role-card medicare-role" onclick="showMedicareLogin()">
+                    <i class="fas fa-hospital-symbol"></i>
+                    <h4>Medicare Administrator</h4>
+                    <p>Login to review claims and detect potential fraud patterns</p>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Provider Login -->
+        <div class="login-container" id="providerLogin">
+            <div class="login-box provider-login">
+                <div class="login-header">
+                    <i class="fas fa-user-md"></i>
+                    <h3>Provider Login</h3>
+                    <p>Access your provider dashboard</p>
+                </div>
+                <form id="providerLoginForm">
+                    <div class="form-group">
+                        <label for="provider-email">Email Address</label>
+                        <input type="email" id="provider-email" placeholder="Enter your email" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="provider-id">Provider ID</label>
+                        <input type="text" id="provider-id" placeholder="Enter your provider ID" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="provider-password">Password</label>
+                        <input type="password" id="provider-password" placeholder="Enter your password" required>
+                    </div>
+                    <div class="form-options">
+                        <label>
+                            <input type="checkbox"> Remember me
+                        </label>
+                        <a href="#">Forgot Password?</a>
+                    </div>
+                    <button type="submit" class="login-btn">Login as Provider</button>
+                    <div class="signup-text">
+                        <p>Don't have an account? <a class="switch-btn" onclick="showProviderSignup()">Sign up here</a></p>
+                    </div>
+                    <a class="back-btn" onclick="showRoleSelection()">&larr; Back to role selection</a>
+                </form>
+            </div>
+        </div>
+        
+        <!-- Provider Sign Up -->
+        <div class="signup-container" id="providerSignup">
+            <div class="signup-box provider-signup">
+                <div class="signup-header">
+                    <i class="fas fa-user-md"></i>
+                    <h3>Provider Sign Up</h3>
+                    <p>Create a new provider account</p>
+                </div>
+                <form id="providerSignupForm">
+                    <div class="form-group">
+                        <label for="provider-signup-name">Full Name</label>
+                        <input type="text" id="provider-signup-name" placeholder="Enter your full name" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="provider-signup-email">Email Address</label>
+                        <input type="email" id="provider-signup-email" placeholder="Enter your email" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="provider-signup-password">Password</label>
+                        <input type="password" id="provider-signup-password" placeholder="Create a password" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="provider-signup-confirm">Confirm Password</label>
+                        <input type="password" id="provider-signup-confirm" placeholder="Confirm your password" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="provider-signup-phone">Phone Number</label>
+                        <input type="tel" id="provider-signup-phone" placeholder="Enter your phone number" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="provider-signup-organization">Organization</label>
+                        <input type="text" id="provider-signup-organization" placeholder="Enter your organization name" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="provider-signup-specialty">Specialty</label>
+                        <select id="provider-signup-specialty" required>
+                            <option value="">Select your specialty</option>
+                            <option value="cardiology">Cardiology</option>
+                            <option value="neurology">Neurology</option>
+                            <option value="orthopedics">Orthopedics</option>
+                            <option value="pediatrics">Pediatrics</option>
+                            <option value="surgery">Surgery</option>
+                            <option value="internal">Internal Medicine</option>
+                            <option value="other">Other</option>
+                        </select>
+                    </div>
+                    <button type="submit" class="signup-btn">Create Provider Account</button>
+                    <div class="signup-text">
+                        <p>Already have an account? <a class="switch-btn" onclick="showProviderLogin()">Login here</a></p>
+                    </div>
+                    <a class="back-btn" onclick="showRoleSelection()">&larr; Back to role selection</a>
+                </form>
+            </div>
+        </div>
+        
+        <!-- Medicare Login -->
+        <div class="login-container" id="medicareLogin">
+            <div class="login-box medicare-login">
+                <div class="login-header">
+                    <i class="fas fa-hospital-symbol"></i>
+                    <h3>Medicare Admin Login</h3>
+                    <p>Access the Medicare admin portal</p>
+                </div>
+                <form id="medicareLoginForm">
+                    <div class="form-group">
+                        <label for="medicare-email">Email Address</label>
+                        <input type="email" id="medicare-email" placeholder="Enter your email" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="medicare-id">Admin ID</label>
+                        <input type="text" id="medicare-id" placeholder="Enter your admin ID" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="medicare-password">Password</label>
+                        <input type="password" id="medicare-password" placeholder="Enter your password" required>
+                    </div>
+                    <div class="form-options">
+                        <label>
+                            <input type="checkbox"> Remember me
+                        </label>
+                        <a href="#">Forgot Password?</a>
+                    </div>
+                    <button type="submit" class="login-btn">Login as Medicare Admin</button>
+                    <div class="signup-text">
+                        <p>Need admin access? <a class="switch-btn" onclick="showMedicareSignup()">Request credentials</a></p>
+                    </div>
+                    <a class="back-btn" onclick="showRoleSelection()">&larr; Back to role selection</a>
+                </form>
+            </div>
+        </div>
+        
+        <!-- Medicare Sign Up -->
+        <div class="signup-container" id="medicareSignup">
+            <div class="signup-box medicare-signup">
+                <div class="signup-header">
+                    <i class="fas fa-hospital-symbol"></i>
+                    <h3>Medicare Admin Access Request</h3>
+                    <p>Request administrator access to the Medicare portal</p>
+                </div>
+                <form id="medicareSignupForm">
+                    <div class="form-group">
+                        <label for="medicare-signup-name">Full Name</label>
+                        <input type="text" id="medicare-signup-name" placeholder="Enter your full name" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="medicare-signup-email">Email Address</label>
+                        <input type="email" id="medicare-signup-email" placeholder="Enter your email" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="medicare-signup-position">Position/Title</label>
+                        <input type="text" id="medicare-signup-position" placeholder="Enter your position/title" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="medicare-signup-department">Department</label>
+                        <select id="medicare-signup-department" required>
+                            <option value="">Select your department</option>
+                            <option value="fraud-detection">Fraud Detection</option>
+                            <option value="claims-review">Claims Review</option>
+                            <option value="compliance">Compliance</option>
+                            <option value="audit">Audit</option>
+                            <option value="management">Management</option>
+                            <option value="other">Other</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="medicare-signup-justification">Justification for Access</label>
+                        <textarea id="medicare-signup-justification" placeholder="Explain why you need admin access" rows="3" required></textarea>
+                    </div>
+                    <button type="submit" class="signup-btn">Request Admin Access</button>
+                    <div class="signup-text">
+                        <p>Already have an account? <a class="switch-btn" onclick="showMedicareLogin()">Login here</a></p>
+                    </div>
+                    <a class="back-btn" onclick="showRoleSelection()">&larr; Back to role selection</a>
+                </form>
+            </div>
+        </div>
+        
+        <!-- Provider Dashboard -->
+        <div class="dashboard provider-dashboard" id="providerDashboard">
+            <div class="dashboard-header">
+                <h2><i class="fas fa-user-md"></i> Provider Dashboard</h2>
+                <p>Welcome, <span id="providerName">Dr. John Smith</span> (ID: <span id="providerIdDisplay">PR-789456</span>)</p>
+            </div>
+            
+            <div class="stats">
+                <div class="stat-card">
+                    <i class="fas fa-file-upload" style="color: var(--provider);"></i>
+                    <h3>42</h3>
+                    <p>Claims Submitted</p>
+                </div>
+                <div class="stat-card">
+                    <i class="fas fa-check-circle" style="color: var(--success);"></i>
+                    <h3>38</h3>
+                    <p>Approved Claims</p>
+                </div>
+                <div class="stat-card">
+                    <i class="fas fa-clock" style="color: var(--warning);"></i>
+                    <h3>4</h3>
+                    <p>Pending Review</p>
+                </div>
+                <div class="stat-card">
+                    <i class="fas fa-times-circle" style="color: var(--accent);"></i>
+                    <h3>0</h3>
+                    <p>Rejected Claims</p>
+                </div>
+            </div>
+            
+            <div class="dashboard-content">
+                <div class="content-card">
+                    <h3>Submit New Claim</h3>
+                    <div class="upload-area" onclick="document.getElementById('fileUpload').click()">
+                        <i class="fas fa-cloud-upload-alt"></i>
+                        <p>Click to upload or drag and drop</p>
+                        <p>PDF, JPEG, PNG (Max 10MB)</p>
+                        <input type="file" id="fileUpload" style="display: none;">
+                    </div>
+                    <button class="login-btn">Submit Claim for Review</button>
+                </div>
+                
+                <div class="content-card">
+                    <h3>Recent Claims</h3>
+                    <table class="results-table">
+                        <thead>
+                            <tr>
+                                <th>Claim ID</th>
+                                <th>Date</th>
+                                <th>Status</th>
+                                <th>Amount</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>CL-78945</td>
+                                <td>Oct 12, 2023</td>
+                                <td><span class="risk-low">Approved</span></td>
+                                <td>$1,245.00</td>
+                            </tr>
+                            <tr>
+                                <td>CL-78944</td>
+                                <td>Oct 11, 2023</td>
+                                <td><span class="risk-low">Approved</span></td>
+                                <td>$867.50</td>
+                            </tr>
+                            <tr>
+                                <td>CL-78943</td>
+                                <td>Oct 10, 2023</td>
+                                <td><span class="risk-medium">Under Review</span></td>
+                                <td>$2,140.00</td>
+                            </tr>
+                            <tr>
+                                <td>CL-78942</td>
+                                <td>Oct 9, 2023</td>
+                                <td><span class="risk-low">Approved</span></td>
+                                <td>$956.75</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Medicare Dashboard -->
+        <div class="dashboard medicare-dashboard" id="medicareDashboard">
+            <div class="dashboard-header">
+                <h2><i class="fas fa-hospital-symbol"></i> Medicare Administrator Dashboard</h2>
+                <p>Welcome, <span id="adminName">Sarah Johnson</span> (ID: <span id="adminIdDisplay">AD-123456</span>)</p>
+            </div>
+            
+            <div class="stats">
+                <div class="stat-card">
+                    <i class="fas fa-file-invoice" style="color: var(--medicare);"></i>
+                    <h3>1,284</h3>
+                    <p>Total Claims</p>
+                </div>
+                <div class="stat-card">
+                    <i class="fas fa-search" style="color: var(--accent);"></i>
+                    <h3>47</h3>
+                    <p>Potential Fraud Cases</p>
+                </div>
+                <div class="stat-card">
+                    <i class="fas fa-chart-line" style="color: var(--success);"></i>
+                    <h3>$3.2M</h3>
+                    <p>Potential Savings</p>
+                </div>
+                <div class="stat-card">
+                    <i class="fas fa-exclamation-triangle" style="color: var(--warning);"></i>
+                    <h3>12</h3>
+                    <p>High Risk Providers</p>
+                </div>
+            </div>
+            
+            <div class="dashboard-content">
+                <div class="content-card">
+                    <h3>Fraud Pattern Detection</h3>
+                    <div class="search-box">
+                        <input type="text" placeholder="Search provider ID, name, or claim ID">
+                        <button><i class="fas fa-search"></i> Search</button>
+                    </div>
+                    <div class="filters">
+                        <select>
+                            <option>All Risk Levels</option>
+                            <option>High Risk</option>
+                            <option>Medium Risk</option>
+                            <option>Low Risk</option>
+                        </select>
+                        <select>
+                            <option>All Time</option>
+                            <option>Last 7 Days</option>
+                            <option>Last 30 Days</option>
+                            <option>Last Quarter</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <div class="content-card">
+                    <h3>Recent Suspicious Activities</h3>
+                    <table class="results-table">
+                        <thead>
+                            <tr>
+                                <th>Provider ID</th>
+                                <th>Provider Name</th>
+                                <th>Risk Level</th>
+                                <th>Claim Amount</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>PR-45879</td>
+                                <td>City Medical Group</td>
+                                <td><span class="risk-high">High Risk</span></td>
+                                <td>$12,847.00</td>
+                                <td><button class="btn-provider">Review</button></td>
+                            </tr>
+                            <tr>
+                                <td>PR-32568</td>
+                                <td>Wellness Clinic</td>
+                                <td><span class="risk-medium">Medium Risk</span></td>
+                                <td>$8,654.50</td>
+                                <td><button class="btn-provider">Review</button></td>
+                            </tr>
+                            <tr>
+                                <td>PR-78542</td>
+                                <td>Regional Health Services</td>
+                                <td><span class="risk-high">High Risk</span></td>
+                                <td>$23,541.00</td>
+                                <td><button class="btn-provider">Review</button></td>
+                            </tr>
+                            <tr>
+                                <td>PR-96325</td>
+                                <td>Family Care Associates</td>
+                                <td><span class="risk-medium">Medium Risk</span></td>
+                                <td>$5,874.25</td>
+                                <td><button class="btn-provider">Review</button></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        
+        <footer>
+            <p>&copy; 2023 MediGuard - Medicare Fraud Detection System | Protecting Healthcare Integrity</p>
+        </footer>
+    </div>
+
+    <script>
+        // Get DOM elements
+        const roleSelection = document.getElementById('roleSelection');
+        const providerLogin = document.getElementById('providerLogin');
+        const medicareLogin = document.getElementById('medicareLogin');
+        const providerSignup = document.getElementById('providerSignup');
+        const medicareSignup = document.getElementById('medicareSignup');
+        const providerDashboard = document.getElementById('providerDashboard');
+        const medicareDashboard = document.getElementById('medicareDashboard');
+        const logoutBtn = document.getElementById('logoutBtn');
+        
+        // Function to show provider login
+        function showProviderLogin() {
+            roleSelection.style.display = 'none';
+            providerLogin.style.display = 'flex';
+            medicareLogin.style.display = 'none';
+            providerSignup.style.display = 'none';
+            medicareSignup.style.display = 'none';
+            providerDashboard.style.display = 'none';
+            medicareDashboard.style.display = 'none';
+            logoutBtn.style.display = 'none';
+        }
+        
+        // Function to show medicare login
+        function showMedicareLogin() {
+            roleSelection.style.display = 'none';
+            providerLogin.style.display = 'none';
+            medicareLogin.style.display = 'flex';
+            providerSignup.style.display = 'none';
+            medicareSignup.style.display = 'none';
+            providerDashboard.style.display = 'none';
+            medicareDashboard.style.display = 'none';
+            logoutBtn.style.display = 'none';
+        }
+        
+        // Function to show provider signup
+        function showProviderSignup() {
+            roleSelection.style.display = 'none';
+            providerLogin.style.display = 'none';
+            medicareLogin.style.display = 'none';
+            providerSignup.style.display = 'flex';
+            medicareSignup.style.display = 'none';
+            providerDashboard.style.display = 'none';
+            medicareDashboard.style.display = 'none';
+            logoutBtn.style.display = 'none';
+        }
+        
+        // Function to show medicare signup
+        function showMedicareSignup() {
+            roleSelection.style.display = 'none';
+            providerLogin.style.display = 'none';
+            medicareLogin.style.display = 'none';
+            providerSignup.style.display = 'none';
+            medicareSignup.style.display = 'flex';
+            providerDashboard.style.display = 'none';
+            medicareDashboard.style.display = 'none';
+            logoutBtn.style.display = 'none';
+        }
+        
+        // Function to show role selection
+        function showRoleSelection() {
+            roleSelection.style.display = 'block';
+            providerLogin.style.display = 'none';
+            medicareLogin.style.display = 'none';
+            providerSignup.style.display = 'none';
+            medicareSignup.style.display = 'none';
+            providerDashboard.style.display = 'none';
+            medicareDashboard.style.display = 'none';
+            logoutBtn.style.display = 'none';
+        }
+        
+        // Function to show provider dashboard
+        function showProviderDashboard() {
+            roleSelection.style.display = 'none';
+            providerLogin.style.display = 'none';
+            medicareLogin.style.display = 'none';
+            providerSignup.style.display = 'none';
+            medicareSignup.style.display = 'none';
+            providerDashboard.style.display = 'block';
+            medicareDashboard.style.display = 'none';
+            logoutBtn.style.display = 'block';
+        }
+        
+        // Function to show medicare dashboard
+        function showMedicareDashboard() {
+            roleSelection.style.display = 'none';
+            providerLogin.style.display = 'none';
+            medicareLogin.style.display = 'none';
+            providerSignup.style.display = 'none';
+            medicareSignup.style.display = 'none';
+            providerDashboard.style.display = 'none';
+            medicareDashboard.style.display = 'block';
+            logoutBtn.style.display = 'block';
+        }
+        
+        // Function to logout
+        function logout() {
+            showRoleSelection();
+        }
+        
+        // Form submission handlers
+        document.getElementById('providerLoginForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const email = document.getElementById('provider-email').value;
+            const providerId = document.getElementById('provider-id').value;
+            const password = document.getElementById('provider-password').value;
+            
+            if (email && providerId && password) {
+                document.getElementById('providerIdDisplay').textContent = providerId;
+                document.getElementById('providerName').textContent = "Dr. " + email.split('@')[0];
+                showProviderDashboard();
+            } else {
+                alert('Please fill in all fields');
+            }
+        });
+        
+        document.getElementById('medicareLoginForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const email = document.getElementById('medicare-email').value;
+            const adminId = document.getElementById('medicare-id').value;
+            const password = document.getElementById('medicare-password').value;
+            
+            if (email && adminId && password) {
+                document.getElementById('adminIdDisplay').textContent = adminId;
+                document.getElementById('adminName').textContent = email.split('@')[0];
+                showMedicareDashboard();
+            } else {
+                alert('Please fill in all fields');
+            }
+        });
+        
+        document.getElementById('providerSignupForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const name = document.getElementById('provider-signup-name').value;
+            const email = document.getElementById('provider-signup-email').value;
+            const password = document.getElementById('provider-signup-password').value;
+            const confirmPassword = document.getElementById('provider-signup-confirm').value;
+            
+            if (password !== confirmPassword) {
+                alert('Passwords do not match');
+                return;
+            }
+            
+            // Generate a provider ID (in a real app, this would come from the server)
+            const providerId = "PR-" + Math.floor(100000 + Math.random() * 900000);
+            
+            alert(`Account created successfully!\nYour Provider ID is: ${providerId}\nPlease save this ID for future logins.`);
+            
+            // Pre-fill the login form
+            document.getElementById('provider-email').value = email;
+            document.getElementById('provider-id').value = providerId;
+            
+            showProviderLogin();
+        });
+        
+        document.getElementById('medicareSignupForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const name = document.getElementById('medicare-signup-name').value;
+            const email = document.getElementById('medicare-signup-email').value;
+            const position = document.getElementById('medicare-signup-position').value;
+            const department = document.getElementById('medicare-signup-department').value;
+            const justification = document.getElementById('medicare-signup-justification').value;
+            
+            alert('Your request for Medicare Administrator access has been submitted for approval. You will receive an email with your credentials once approved.');
+            
+            showMedicareLogin();
+        });
+        
+        // Initialize the page
+        showRoleSelection();
+    </script>
+</body>
+</html>
